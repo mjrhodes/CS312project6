@@ -621,13 +621,61 @@ namespace TSP
         /// <returns>results array for GUI that contains three ints: cost of solution, time spent to find solution, number of solutions found during search (not counting initial BSSF estimate)</returns>
         public string[] greedySolveProblem()
         {
-            string[] results = new string[3];
 
             // TODO: Add your implementation for a greedy solver here.
 
-            results[COST] = "not implemented";    // load results into array here, replacing these dummy values
-            results[TIME] = "-1";
-            results[COUNT] = "-1";
+            //1.V = { 1, ..., n - 1}          // Vertices except for 0.
+            ArrayList cities = new ArrayList();
+            for(int i = 1; i < this.Cities.Length; i++)
+            {
+                cities.Add(this.Cities[i]);
+            }
+
+            //2.U = { 0}                    // Vertex 0.
+            ArrayList updatedCities = new ArrayList() { this.Cities[0] };
+
+            Stopwatch timer = new Stopwatch();
+            timer.Start();
+            //3.   while V not empty
+            while (cities.Count > 0)
+            {
+                //4.u = most recently added vertex to U
+                City currentCity = (City)updatedCities[updatedCities.Count - 1];
+
+                //5.Find vertex v in V closest to u
+                City closestCity = (City)cities[0];
+                double distanceToClosestCity = currentCity.costToGetTo(closestCity);
+                int closestCityIndex = 0;
+                for (int i = 1; i < cities.Count; i++)
+                {
+                    if(distanceToClosestCity > currentCity.costToGetTo((City)cities[i]))
+                    {
+                        closestCityIndex = i;
+                        closestCity = (City)cities[closestCityIndex];
+                        distanceToClosestCity = currentCity.costToGetTo(closestCity);
+                    }
+                }
+
+                //6.Add v to U and remove v from V.
+                updatedCities.Add(closestCity);
+                cities.RemoveAt(closestCityIndex);
+            } //7.endwhile
+            timer.Stop();
+
+            //8.Output vertices in the order they were added to U
+            this.Route = new ArrayList();
+            for (int i = 0; i < Cities.Length; i++)                            // Now build the route
+            {
+                this.Route.Add(updatedCities[i]);
+            }
+
+            this.bssf = new TSPSolution(Route);
+            count++;
+
+            string[] results = new string[3];
+            results[COST] = costOfBssf().ToString();                          // load results array
+            results[TIME] = timer.Elapsed.ToString();
+            results[COUNT] = count.ToString();
 
             return results;
         }
