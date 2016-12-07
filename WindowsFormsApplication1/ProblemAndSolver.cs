@@ -639,10 +639,8 @@ namespace TSP
 
             // TODO: Add your implementation for your advanced solver here.
 
-            //ArrayQueue2 q = new ArrayQueue2(Cities.Length);
-
-
-            results[COST] = "not implemented";    // load results into array here, replacing these dummy values
+            Edge[] MST = getMST();
+                                    results[COST] = "not implemented";    // load results into array here, replacing these dummy values
             results[TIME] = "-1";
             results[COUNT] = "-1";
 
@@ -657,8 +655,36 @@ namespace TSP
          */ 
         private Edge[] getMST()
         {
-            // TODO
-            return null;
+            ArrayQueue2 q = new ArrayQueue2(Cities.Length);
+            ArrayList edges = new ArrayList();
+            HashSet<int> s = new HashSet<int>();
+
+            s.Add(0);
+            for (int i = 1; i < Cities.Length; i++)
+            {
+                double cost = Cities[0].costToGetTo(Cities[i]);
+                if (!double.IsPositiveInfinity(cost)) q.insert(new Edge(0, i, cost));
+            }
+
+            while(q.getSize() > 0)
+            {
+                Edge edge = q.deletemin();
+                int city = edge.getDestination();
+                if (s.Contains(city)) continue;
+                s.Add(city);
+                edges.Add(edge);
+                for(int i = 0; i < Cities.Length; i++)
+                {
+                    if (s.Contains(i)) continue;
+                    double cost = Cities[city].costToGetTo(Cities[i]);
+                    if (!double.IsPositiveInfinity(cost)) q.insert(new Edge(city, i, cost));
+                }
+            }
+
+            Edge[] newArray = new Edge[edges.Count];
+            edges.CopyTo(newArray);
+
+            return newArray;
         }
 
         /*
