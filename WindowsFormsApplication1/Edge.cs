@@ -45,5 +45,12 @@ namespace TSP
             else
                 throw new ArgumentException("Object is not an Edge");
         }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendFormat("{0} -> {1} -> {2}", origin, cost, destination);
+            return sb.ToString();
+        }
     }
 }
