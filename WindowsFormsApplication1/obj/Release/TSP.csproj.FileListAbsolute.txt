@@ -9,3 +9,6 @@ F:\Desktop\TSP\WindowsFormsApplication1\obj\Release\TSP.Properties.Resources.res
 F:\Desktop\TSP\WindowsFormsApplication1\obj\Release\TSP.csproj.GenerateResource.Cache
 F:\Desktop\TSP\WindowsFormsApplication1\obj\Release\WindowsFormsApplication1.exe
 F:\Desktop\TSP\WindowsFormsApplication1\obj\Release\WindowsFormsApplication1.pdb
+D:\Dropbox\BYU\Fall2016\CS312\Project6\WindowsFormsApplication1\bin\Release\WindowsFormsApplication1.exe.config
+D:\Dropbox\BYU\Fall2016\CS312\Project6\WindowsFormsApplication1\obj\Release\WindowsFormsApplication1.exe
+D:\Dropbox\BYU\Fall2016\CS312\Project6\WindowsFormsApplication1\obj\Release\WindowsFormsApplication1.pdb
