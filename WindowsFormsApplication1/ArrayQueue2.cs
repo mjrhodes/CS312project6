@@ -10,15 +10,11 @@ namespace TSP
     {
         private Edge[] q;
         private int currentSize;
-        private int free;
-        private int max;
 
         public ArrayQueue2(int numCities)
         {
             currentSize = 0;
-            free = 0;
-            max = numCities * numCities;
-            q = new Edge[max];
+            q = new Edge[numCities^numCities];
             for (int i = 0; i < q.Length; i++)
                 q[i] = null;
         }
@@ -27,14 +23,8 @@ namespace TSP
 
         public void insert(Edge edge)
         {
-            if (free > q.Length - 1)
-            {
-                throw new InsufficientMemoryException("Exceed Priority Queue memory!");
-            }
-            q[free] = edge;
+            q[currentSize] = edge;
             currentSize++;
-            free++;
-            if (free == max) cleanUp();
         }
 
         public Edge deletemin()
@@ -54,8 +44,13 @@ namespace TSP
             }
             if(index != -1)
             {
+                while(index < q.Length-1 && q[index] != null)
+                {
+                    q[index] = q[index + 1];
+                    index++;
+                }
                 currentSize--;
-                q[index] = null;
+                q[currentSize] = null;
             }
             return result;
         }
@@ -63,28 +58,6 @@ namespace TSP
         public int getSize()
         {
             return currentSize;
-        }
-
-        public void cleanUp()
-        {
-            int index = 0;
-            free = 0;
-            while (index < q.Length - 1)
-            {
-                while (q[index] == null && index < q.Length-1) index++;
-                if (free == index)
-                {
-                    free++;
-                    index++;
-                }
-                else
-                {
-                    q[free] = q[index];
-                    q[index] = null;
-                    free++;
-                }
-            }
-            free = currentSize;
         }
 
         public override string ToString()
