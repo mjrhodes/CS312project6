@@ -640,7 +640,9 @@ namespace TSP
             // TODO: Add your implementation for your advanced solver here.
 
             Edge[] MST = getMST();
-                                    results[COST] = "not implemented";    // load results into array here, replacing these dummy values
+            findOddDegrees(MST);
+
+            results[COST] = "not implemented";    // load results into array here, replacing these dummy values
             results[TIME] = "-1";
             results[COUNT] = "-1";
 
@@ -694,7 +696,26 @@ namespace TSP
         private int[] findOddDegrees(Edge[] MST)
         {
             //TODO
-            return null;
+            ArrayList vertices = new ArrayList();
+            int[] counts = new int[Cities.Length];
+            foreach(Edge e in MST)
+            {
+                counts[e.getOrigin()] = counts[e.getOrigin()] + 1;
+                counts[e.getDestination()] = counts[e.getDestination()] + 1;
+            }
+
+            Console.WriteLine(counts.ToString());
+
+            for(int i = 0; i < Cities.Length; i++)
+            {
+                if(counts[i] % 2 != 0) vertices.Add(i);
+            }
+            int[] oddVerts = new int[vertices.Count];
+            vertices.CopyTo(oddVerts);
+
+            Console.WriteLine(oddVerts.ToString());
+
+            return oddVerts;
         }
 
         /*
