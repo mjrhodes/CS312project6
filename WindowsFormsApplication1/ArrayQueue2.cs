@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TSP
 {
-    class ArrayQueue2 : IComparable
+    class ArrayQueue2
     {
         private Edge[] q;
         private int currentSize;
