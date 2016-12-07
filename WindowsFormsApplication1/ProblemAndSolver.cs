@@ -621,45 +621,69 @@ namespace TSP
         /// <returns>results array for GUI that contains three ints: cost of solution, time spent to find solution, number of solutions found during search (not counting initial BSSF estimate)</returns>
         public string[] greedySolveProblem()
         {
-
-            // TODO: Add your implementation for a greedy solver here.
-
-            //1.V = { 1, ..., n - 1}          // Vertices except for 0.
-            ArrayList cities = new ArrayList();
-            for(int i = 1; i < this.Cities.Length; i++)
-            {
-                cities.Add(this.Cities[i]);
-            }
-
-            //2.U = { 0}                    // Vertex 0.
-            ArrayList updatedCities = new ArrayList() { this.Cities[0] };
-
             Stopwatch timer = new Stopwatch();
             timer.Start();
-            //3.   while V not empty
-            while (cities.Count > 0)
-            {
-                //4.u = most recently added vertex to U
-                City currentCity = (City)updatedCities[updatedCities.Count - 1];
 
-                //5.Find vertex v in V closest to u
-                City closestCity = (City)cities[0];
-                double distanceToClosestCity = currentCity.costToGetTo(closestCity);
-                int closestCityIndex = 0;
-                for (int i = 1; i < cities.Count; i++)
+            ArrayList updatedCities = new ArrayList();
+            for (int i = 0; i < this.Cities.Length; i++) //For each city - in case starting city isn't a legal solution
+            {
+                //1.V = { 1, ..., n - 1}          // Vertices except for 0.
+                ArrayList cities = new ArrayList();
+                for (int j = i + 1; j < this.Cities.Length; j++)
                 {
-                    if(distanceToClosestCity > currentCity.costToGetTo((City)cities[i]))
+                    cities.Add(this.Cities[j]);
+                }
+                //Wrap around to the first city
+                if (i > 0)
+                {
+                    for (int k = 0; k < i; k++)
                     {
-                        closestCityIndex = i;
-                        closestCity = (City)cities[closestCityIndex];
-                        distanceToClosestCity = currentCity.costToGetTo(closestCity);
+                        cities.Add(this.Cities[k]);
                     }
                 }
 
-                //6.Add v to U and remove v from V.
-                updatedCities.Add(closestCity);
-                cities.RemoveAt(closestCityIndex);
-            } //7.endwhile
+                //2.U = { 0}                    // Vertex 0 / starting city.
+                updatedCities = new ArrayList() { this.Cities[i] }; //Start at each city until a legal solution is found
+
+                //3.   while V not empty
+                while (cities.Count > 0)
+                {
+                    //4.u = most recently added vertex to U
+                    City currentCity = (City)updatedCities[updatedCities.Count - 1];
+
+                    //5.Find vertex v in V closest to u
+                    City closestCity = (City)cities[0];
+                    double distanceToClosestCity = currentCity.costToGetTo(closestCity);
+                    int closestCityIndex = 0;
+                    for (int j = i + 1; j < cities.Count; j++)
+                    {
+                        if (distanceToClosestCity > currentCity.costToGetTo((City)cities[j]))
+                        {
+                            closestCityIndex = j;
+                            closestCity = (City)cities[closestCityIndex];
+                            distanceToClosestCity = currentCity.costToGetTo(closestCity);
+                        }
+                        if(Double.IsInfinity(distanceToClosestCity)) //Not a legal solution, try next city
+                        {
+                            break;
+                        }
+                    }
+
+                    //6.Add v to U and remove v from V.
+                    updatedCities.Add(closestCity);
+                    cities.RemoveAt(closestCityIndex);
+                } //7.endwhile
+
+                count++;
+
+                //Check if legal solution
+                City firstCity = (City)updatedCities[0];
+                City lastCity = (City)updatedCities[updatedCities.Count - 1];
+                if (!Double.IsInfinity(lastCity.costToGetTo(firstCity)))
+                {
+                    break; //Legal solution found, break for loop
+                }
+            }
             timer.Stop();
 
             //8.Output vertices in the order they were added to U
@@ -670,7 +694,6 @@ namespace TSP
             }
 
             this.bssf = new TSPSolution(Route);
-            count++;
 
             string[] results = new string[3];
             results[COST] = costOfBssf().ToString();                          // load results array
