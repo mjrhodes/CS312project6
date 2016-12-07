@@ -635,22 +635,11 @@ namespace TSP
         public string[] fancySolveProblem()
         {
             string[] results = new string[3];
+            Random rand = new Random();
 
             // TODO: Add your implementation for your advanced solver here.
 
             //ArrayQueue2 q = new ArrayQueue2(Cities.Length);
-            //Edge e1 = new Edge(0, 1, 19);
-            //Edge e2 = new Edge(1, 2, 3);
-            //Edge e3 = new Edge(2, 3, 11);
-            //Edge e4 = new Edge(3, 4, 14);
-            //Edge e5 = new Edge(4, 0, 21);
-            //q.insert(e1);
-            //q.insert(e2);
-            //q.insert(e3);
-            //q.insert(e4);
-            //q.insert(e5);
-
-            //Console.WriteLine(q.ToString());
 
 
             results[COST] = "not implemented";    // load results into array here, replacing these dummy values
