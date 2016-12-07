@@ -14,7 +14,12 @@ namespace TSP
         public ArrayQueue2(int numCities)
         {
             currentSize = 0;
-            q = new Edge[numCities^numCities];
+            int arraySize = (int)Math.Pow(numCities, 2);
+            if(arraySize < 0) //overflow
+            {
+                arraySize = int.MaxValue;
+            }
+            q = new Edge[arraySize];
             for (int i = 0; i < q.Length; i++)
                 q[i] = null;
         }
