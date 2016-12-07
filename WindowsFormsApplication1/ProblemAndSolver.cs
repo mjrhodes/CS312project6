@@ -646,6 +646,64 @@ namespace TSP
 
             return results;
         }
+
+        /* 
+         * MST : Minimum Spanning Tree
+         * Iterating through 'Cities' to evaluate travel costs,
+         * adds costs to PQ,
+         * and adds smallest cost edges to array representing a MST
+         */ 
+        private Edge[] getMST()
+        {
+            // TODO
+            return null;
+        }
+
+        /*
+         * Takes a MST and returns a list of indices representing vertices with odd degrees
+         * (degrees = number of edges going in/out of vertex)
+         */
+        private int[] findOddDegrees(Edge[] MST)
+        {
+            //TODO
+            return null;
+        }
+
+        /*
+         * Takes a MST and a list of vertices with odd degrees
+         * matches edges between pairs of vertices (which have odd degrees) in MST (if destination can be reached)
+         * vertices located at indices given in int[] vertices
+         */
+        private Edge[] matchOddDegreeVertices(Edge[] MST, int[] vertices)
+        {
+            //TODO
+            //alter MST
+            return MST;
+        }
+
+        /*
+         * Takes a MST and finds a Eulerian tour by traversing edges in MST
+         * adds cities visited in order to Route
+         */
+        private ArrayList findEulerianTour(Edge[] MST)
+        {
+            //TODO
+            //add cities visited by tour to Route
+            return Route;
+        }
+
+        /*
+         * Checks cities in Route
+         * Where a city would be revisited,
+         * skip that city and visit next city in Route, if next city is reachable
+         */
+        private ArrayList skipDuplicates()
+        {
+            //TODO
+            //Find revisited vertices and skip
+            return Route; // Completed TSP tour
+        }
+
         #endregion
     }
 
