@@ -1,0 +1,11 @@
+F:\Desktop\TSP\WindowsFormsApplication1\bin\Release\WindowsFormsApplication1.exe.config
+F:\Desktop\TSP\WindowsFormsApplication1\bin\Release\WindowsFormsApplication1.exe
+F:\Desktop\TSP\WindowsFormsApplication1\bin\Release\WindowsFormsApplication1.pdb
+F:\Desktop\TSP\WindowsFormsApplication1\bin\Release\PowerCollections.dll
+F:\Desktop\TSP\WindowsFormsApplication1\bin\Release\PowerCollections.xml
+F:\Desktop\TSP\WindowsFormsApplication1\obj\Release\TSP.csprojResolveAssemblyReference.cache
+F:\Desktop\TSP\WindowsFormsApplication1\obj\Release\TSP.mainform.resources
+F:\Desktop\TSP\WindowsFormsApplication1\obj\Release\TSP.Properties.Resources.resources
+F:\Desktop\TSP\WindowsFormsApplication1\obj\Release\TSP.csproj.GenerateResource.Cache
+F:\Desktop\TSP\WindowsFormsApplication1\obj\Release\WindowsFormsApplication1.exe
+F:\Desktop\TSP\WindowsFormsApplication1\obj\Release\WindowsFormsApplication1.pdb
