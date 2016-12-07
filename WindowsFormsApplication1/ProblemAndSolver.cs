@@ -713,7 +713,8 @@ namespace TSP
             Edge[] MST = getMST();
             int[] oddVertices = findOddDegrees(MST);
             Edge[] newMST = matchOddDegreeVertices(MST, oddVertices);
-
+            this.Route = findEulerianTour(MST);
+            this.bssf = new TSPSolution(this.Route);
             results[COST] = "not implemented";    // load results into array here, replacing these dummy values
             results[TIME] = "-1";
             results[COUNT] = "-1";

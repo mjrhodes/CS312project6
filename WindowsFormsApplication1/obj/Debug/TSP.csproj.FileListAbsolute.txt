@@ -21,3 +21,11 @@ F:\Desktop\TSP\WindowsFormsApplication1\bin\Debug\PowerCollections.pdb
 D:\Dropbox\BYU\Fall2016\CS312\Project6\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe.config
 D:\Dropbox\BYU\Fall2016\CS312\Project6\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.exe
 D:\Dropbox\BYU\Fall2016\CS312\Project6\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.pdb
+D:\Dropbox\BYU\Fall2016\CS312\Project6\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe
+D:\Dropbox\BYU\Fall2016\CS312\Project6\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.pdb
+D:\Dropbox\BYU\Fall2016\CS312\Project6\WindowsFormsApplication1\bin\Debug\PowerCollections.dll
+D:\Dropbox\BYU\Fall2016\CS312\Project6\WindowsFormsApplication1\bin\Debug\PowerCollections.pdb
+D:\Dropbox\BYU\Fall2016\CS312\Project6\WindowsFormsApplication1\obj\Debug\TSP.csprojResolveAssemblyReference.cache
+D:\Dropbox\BYU\Fall2016\CS312\Project6\WindowsFormsApplication1\obj\Debug\TSP.mainform.resources
+D:\Dropbox\BYU\Fall2016\CS312\Project6\WindowsFormsApplication1\obj\Debug\TSP.Properties.Resources.resources
+D:\Dropbox\BYU\Fall2016\CS312\Project6\WindowsFormsApplication1\obj\Debug\TSP.csproj.GenerateResource.Cache
