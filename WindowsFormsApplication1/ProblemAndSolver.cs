@@ -705,14 +705,14 @@ namespace TSP
 
         public string[] fancySolveProblem()
         {
+            string[] results = new string[3];
             Stopwatch timer = new Stopwatch();
             timer.Start();
 
             Edge[] MST = getMST();
             int[] oddVertices = findOddDegrees(MST);
             Edge[] newMST = matchOddDegreeVertices(MST, oddVertices);
-<<<<<<< HEAD
-            if(newMST == null)
+            if (newMST == null)
             {
                 results[COST] = "couldn't solve";    // load results into array here, replacing these dummy values
                 results[TIME] = "-1";
@@ -720,16 +720,12 @@ namespace TSP
 
                 return results;
             }
-            this.Route = findEulerianTour(MST);
-=======
             this.Route = findEulerianTour(newMST);
             this.Route = skipDuplicates();
->>>>>>> f8919ae501500656f3f24d82c0b52af820842977
             this.bssf = new TSPSolution(this.Route);
 
             timer.Stop();
 
-            string[] results = new string[3];
             results[COST] = costOfBssf().ToString();                          // load results array
             results[TIME] = timer.Elapsed.ToString();
             results[COUNT] = count.ToString();
