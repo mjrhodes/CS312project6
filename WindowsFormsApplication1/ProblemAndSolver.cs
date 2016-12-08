@@ -720,8 +720,7 @@ namespace TSP
 
                 return results;
             }
-            this.Route = findEulerianTour(newMST);
-            this.Route = skipDuplicates();
+            this.Route = findEulerianTour(newMST); //Returns route without duplicates
             this.bssf = new TSPSolution(this.Route);
 
             timer.Stop();
@@ -889,6 +888,7 @@ namespace TSP
 
             //Initialize a boolean array to keep track of visited edges
             bool[] visitedEdges = new bool[MST.Length];
+
             for(int i = 0; i < MST.Length; i++)
             {
                 visitedEdges[i] = false;
@@ -901,9 +901,12 @@ namespace TSP
             City destinationCity = (City)this.Cities[destinationCityIndex];
             int lastCityAddedIndex = destinationCityIndex;
             ArrayList tour = new ArrayList() { startCity, destinationCity };
+            ArrayList tourIndices = new ArrayList();
 
             //Mark the starting edge visited
             visitedEdges[0] = true;
+            tourIndices.Add(startCityIndex);
+            tourIndices.Add(destinationCityIndex);
 
             bool allEdgesVisited = false; //while all edges have not been visited
             do
@@ -926,6 +929,7 @@ namespace TSP
                         lastCityAddedIndex = MST[i].getDestination();
 
                         //Add destination city to tour
+                        tourIndices.Add(lastCityAddedIndex);
                         tour.Add(this.Cities[lastCityAddedIndex]);
 
                         //Mark edge as visited
@@ -938,6 +942,7 @@ namespace TSP
                         lastCityAddedIndex = MST[i].getOrigin();
 
                         //Add origin city to tour
+                        tourIndices.Add(lastCityAddedIndex);
                         tour.Add(this.Cities[lastCityAddedIndex]);
 
                         //Mark edge as visited
@@ -996,7 +1001,8 @@ namespace TSP
 
             } while (!allEdgesVisited); //while all edges in the MST haven't been visited
 
-            return tour;
+
+            return skipDuplicates(tourIndices);
         }
 
         /*
@@ -1004,11 +1010,25 @@ namespace TSP
          * Where a city would be revisited,
          * skip that city and visit next city in Route, if next city is reachable
          */
-        private ArrayList skipDuplicates()
+        private ArrayList skipDuplicates(ArrayList tourIndices)
         {
-            //TODO
+            ArrayList tour = new ArrayList();
+            bool[] visitedCities = new bool[this.Cities.Length];
+
             //Find revisited vertices and skip
-            return Route; // Completed TSP tour
+            for(int i = 0; i < tourIndices.Count; i++)
+            {
+                int currentCityIndex = (int)tourIndices[i];
+                City currentCity = (City)this.Cities[currentCityIndex];
+               
+                if(!visitedCities[currentCityIndex])
+                {
+                    visitedCities[currentCityIndex] = true;
+                    tour.Add(this.Cities[currentCityIndex]);
+                }
+            }
+
+            return tour; // Completed TSP tour
         }
 
         #endregion
