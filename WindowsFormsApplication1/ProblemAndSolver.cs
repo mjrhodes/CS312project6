@@ -713,6 +713,14 @@ namespace TSP
             Edge[] MST = getMST();
             int[] oddVertices = findOddDegrees(MST);
             Edge[] newMST = matchOddDegreeVertices(MST, oddVertices);
+            if(newMST == null)
+            {
+                results[COST] = "couldn't solve";    // load results into array here, replacing these dummy values
+                results[TIME] = "-1";
+                results[COUNT] = "-1";
+
+                return results;
+            }
             this.Route = findEulerianTour(MST);
             this.bssf = new TSPSolution(this.Route);
             results[COST] = "not implemented";    // load results into array here, replacing these dummy values
@@ -801,49 +809,61 @@ namespace TSP
             ArrayList newALMST = new ArrayList();
             foreach(Edge e in MST) newALMST.Add(e);
 
-            ArrayList remaining = new ArrayList();
-            foreach(int v in vertices) remaining.Add(v);
-            
-            while(remaining.Count > 0)
-            {
-                IEnumerator e = remaining.GetEnumerator();
-                e.MoveNext();
-                int city = (int)e.Current;
-                int dest = -1;
-                double min = double.PositiveInfinity;
-                while(e.MoveNext())
-                {
-                    bool flag = false;
-                    foreach(Edge edge in MST)
-                    {
-                        if (edge.getOrigin() == city && edge.getDestination() == (int)e.Current)
-                        {
-                            flag = true;
-                            break;
-                        }
-                        if (edge.getOrigin() == (int)e.Current && edge.getDestination() == city)
-                        {
-                            flag = true;
-                            break;
-                        }
-                    }
-                    if (flag) continue;
-                    double cost = Cities[city].costToGetTo(Cities[(int)e.Current]);
-                    if (cost < min)
-                    {
-                        min = cost;
-                        dest = (int)e.Current;
-                    }
-                }
-                if (dest == -1) throw new IndexOutOfRangeException("Couldn't find matching!");
-                remaining.Remove(city);
-                remaining.Remove(dest);
-                newALMST.Add(new Edge(city, dest, Cities[city].costToGetTo(Cities[dest])));
-            }
+            ArrayList vertsAL = new ArrayList();
+            foreach(int vert in vertices) vertsAL.Add(vert);
+
+            ArrayList result = findNextMatch(vertsAL, new ArrayList(), MST);
+            if (result.Count == 0) return null;
+
+            newALMST.AddRange(result.GetRange(0, result.Count));
 
             Edge[] newMST = new Edge[newALMST.Count];
             newALMST.CopyTo(newMST);
             return newMST;
+        }
+
+        private ArrayList findNextMatch(ArrayList verts, ArrayList edges, Edge[] MST)
+        {
+            if (verts.Count == 0) return edges;
+            ArrayList result = new ArrayList();
+            IEnumerator e = verts.GetEnumerator();
+            e.MoveNext();
+            int city = (int)e.Current;
+            while (e.MoveNext())
+            {
+                bool flag = false;
+                foreach (Edge edge in MST)
+                {
+                    if (edge.getOrigin() == city && edge.getDestination() == (int)e.Current)
+                    {
+                        flag = true;
+                        break;
+                    }
+                    if (edge.getOrigin() == (int)e.Current && edge.getDestination() == city)
+                    {
+                        flag = true;
+                        break;
+                    }
+                }
+                if (flag) continue;
+                double cost = Cities[city].costToGetTo(Cities[(int)e.Current]);
+                if (double.IsPositiveInfinity(cost)) continue;
+                Edge currentEdge = new Edge(city, (int)e.Current, cost);
+                edges.Add(currentEdge);
+                ArrayList remaining = new ArrayList();
+                IEnumerator e2 = verts.GetEnumerator();
+                while(e2.MoveNext())
+                {
+                    if ((int)e2.Current != city && (int)e2.Current != (int)e.Current) remaining.Add((int)e2.Current);
+                }
+                result = findNextMatch(remaining, edges, MST);
+                if (result.Count != 0)
+                {
+                    return edges;
+                }
+                edges.Remove(currentEdge);
+            }
+            return new ArrayList();
         }
 
         /*
