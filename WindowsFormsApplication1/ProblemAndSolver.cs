@@ -886,120 +886,142 @@ namespace TSP
             //    }
             //}
 
-            //Initialize a boolean array to keep track of visited edges
-            bool[] visitedEdges = new bool[MST.Length];
-
-            for(int i = 0; i < MST.Length; i++)
-            {
-                visitedEdges[i] = false;
-            }
-
-            //Create a route with start and destination city
-            int startCityIndex = MST[0].getOrigin();
-            int destinationCityIndex = MST[0].getDestination();
-            City startCity = (City)this.Cities[startCityIndex];
-            City destinationCity = (City)this.Cities[destinationCityIndex];
-            int lastCityAddedIndex = destinationCityIndex;
-            ArrayList tour = new ArrayList() { startCity, destinationCity };
             ArrayList tourIndices = new ArrayList();
-
-            //Mark the starting edge visited
-            visitedEdges[0] = true;
-            tourIndices.Add(startCityIndex);
-            tourIndices.Add(destinationCityIndex);
-
-            bool allEdgesVisited = false; //while all edges have not been visited
-            do
+            bool stuck = true; //If stuck try again from starting in the next city
+            for (int edgeIndex = 0; edgeIndex < MST.Length; edgeIndex++) //Try starting at each city
             {
-                bool stuck = true;
+                //Initialize a boolean array to keep track of visited edges
+                bool[] visitedEdges = new bool[MST.Length];
 
-                //Add cities from MST edges by going edge to edge
-                for (int i = 1; i < MST.Length; i++)
+                for (int i = 0; i < MST.Length; i++)
                 {
-                    //Skip edges that have already been visited
-                    if (visitedEdges[i] == true)
-                    {
-                        continue;
-                    }
-
-                    startCityIndex = MST[i].getOrigin();
-                    destinationCityIndex = MST[i].getDestination();
-                    if(startCityIndex == lastCityAddedIndex) 
-                    {
-                        lastCityAddedIndex = MST[i].getDestination();
-
-                        //Add destination city to tour
-                        tourIndices.Add(lastCityAddedIndex);
-                        tour.Add(this.Cities[lastCityAddedIndex]);
-
-                        //Mark edge as visited
-                        visitedEdges[i] = true;
-
-                        stuck = false;
-                    }
-                    else if (destinationCityIndex == lastCityAddedIndex /*&& i > this.Cities.Length - number of odd vertices*/ )
-                    {
-                        lastCityAddedIndex = MST[i].getOrigin();
-
-                        //Add origin city to tour
-                        tourIndices.Add(lastCityAddedIndex);
-                        tour.Add(this.Cities[lastCityAddedIndex]);
-
-                        //Mark edge as visited
-                        visitedEdges[i] = true;
-
-                        stuck = false;
-                    }
+                    visitedEdges[i] = false;
                 }
 
-                //Check if all of the edges have been visited and break the while loop if true
-                allEdgesVisited = true;
-                foreach (bool isEdgeVisited in visitedEdges)
+                //Create a route with start and destination city
+                int startCityIndex = MST[edgeIndex].getOrigin();
+                int destinationCityIndex = MST[edgeIndex].getDestination();
+                City startCity = (City)this.Cities[startCityIndex];
+                City destinationCity = (City)this.Cities[destinationCityIndex];
+                int lastCityAddedIndex = destinationCityIndex;
+                ArrayList tour = new ArrayList() { startCity, destinationCity };
+                tourIndices = new ArrayList();
+                //Mark the starting edge visited
+                visitedEdges[edgeIndex] = true;
+                tourIndices.Add(startCityIndex);
+                tourIndices.Add(destinationCityIndex);
+
+                bool allEdgesVisited = false; //while all edges have not been visited
+                do
                 {
-                    if (!isEdgeVisited)
+                    stuck = true;
+
+                    //Add cities from MST edges by going edge to edge
+                    for (int i = edgeIndex + 1; i < MST.Length + edgeIndex; i++)
                     {
-                        allEdgesVisited = false;
-                        break;
-                    }
-                }
-
-                if(allEdgesVisited)
-                {
-                    break;
-                }
-
-                //If no new cities were added to the tour then we got stuck and need to explore (a greedy approach)
-                if (stuck)
-                {
-                    City strandedInCity = (City)this.Cities[lastCityAddedIndex];
-                    int closestCityIndex = lastCityAddedIndex + 1;
-                    City closestCity = (City)this.Cities[closestCityIndex];
-                    double costToClosestCity = strandedInCity.costToGetTo(closestCity);
-
-                    for (int i = lastCityAddedIndex + 2; i < this.Cities.Length; i++) //Loop through the cities and find the closest city
-                    {
-                        City otherCity = (City)this.Cities[i];
-                        double costToOtherCity = strandedInCity.costToGetTo(otherCity);
-                        //Go to next closest unvisited city
-                        if (costToClosestCity > costToOtherCity && !visitedEdges[i])
+                        int index = i;
+                        if (index >= MST.Length) //wrap around
                         {
-                            closestCityIndex = i;
-                            closestCity = (City)this.Cities[closestCityIndex];
-                            costToClosestCity = costToOtherCity;
+                            index = (i - MST.Length);
+                        }
+                        if (index == edgeIndex)
+                        {
+                            break;
+                        }
+
+                        //Skip edges that have already been visited
+                        if (visitedEdges[index] == true)
+                        {
+                            continue;
+                        }
+
+                        startCityIndex = MST[index].getOrigin();
+                        destinationCityIndex = MST[index].getDestination();
+                        if (startCityIndex == lastCityAddedIndex)
+                        {
+                            lastCityAddedIndex = MST[index].getDestination();
+
+                            //Add destination city to tour
+                            tourIndices.Add(lastCityAddedIndex);
+                            tour.Add(this.Cities[lastCityAddedIndex]);
+
+                            //Mark edge as visited
+                            visitedEdges[index] = true;
+
+                            stuck = false;
+                        }
+                        else if (destinationCityIndex == lastCityAddedIndex /*&& i > this.Cities.Length - number of odd vertices*/ )
+                        {
+                            lastCityAddedIndex = MST[index].getOrigin();
+
+                            //Add origin city to tour
+                            tourIndices.Add(lastCityAddedIndex);
+                            tour.Add(this.Cities[lastCityAddedIndex]);
+
+                            //Mark edge as visited
+                            visitedEdges[index] = true;
+
+                            stuck = false;
                         }
                     }
 
-                    //This is bad news here
-                    if(Double.IsInfinity(costToClosestCity))
+                    //Check if all of the edges have been visited and break the while loop if true
+                    allEdgesVisited = true;
+                    foreach (bool isEdgeVisited in visitedEdges)
                     {
-                        Console.Write("We got stuck cap'n");
+                        if (!isEdgeVisited)
+                        {
+                            allEdgesVisited = false;
+                            break;
+                        }
                     }
 
-                    //Add closest city to tour
-                    tour.Add(closestCity);
-                }
+                    if (allEdgesVisited)
+                    {
+                        break;
+                    }
 
-            } while (!allEdgesVisited); //while all edges in the MST haven't been visited
+                    if(stuck)
+                    {
+                        break;
+                    }
+
+                    //If no new cities were added to the tour then we got stuck and need to explore (a greedy approach)
+                    //if (stuck)
+                    //{
+                    //    City strandedInCity = (City)this.Cities[lastCityAddedIndex];
+                    //    int closestCityIndex = lastCityAddedIndex + 1;
+                    //    City closestCity = (City)this.Cities[closestCityIndex];
+                    //    double costToClosestCity = strandedInCity.costToGetTo(closestCity);
+
+                    //    for (int i = lastCityAddedIndex + 2; i < this.Cities.Length; i++) //Loop through the cities and find the closest city
+                    //    {
+                    //        City otherCity = (City)this.Cities[i];
+                    //        double costToOtherCity = strandedInCity.costToGetTo(otherCity);
+                    //        //Go to next closest unvisited city
+                    //        if (costToClosestCity > costToOtherCity && !visitedEdges[i])
+                    //        {
+                    //            closestCityIndex = i;
+                    //            closestCity = (City)this.Cities[closestCityIndex];
+                    //            costToClosestCity = costToOtherCity;
+                    //        }
+                    //    }
+
+                    //    //This is bad news here
+                    //    if(Double.IsInfinity(costToClosestCity))
+                    //    {
+                    //        Console.Write("We got stuck cap'n");
+                    //    }
+
+                    //    //Add closest city to tour
+                    //    tour.Add(closestCity);
+                    //}
+                } while (!allEdgesVisited); //while all edges in the MST haven't been visited
+                if(!stuck)
+                {
+                    break;
+                }
+            }
 
 
             return skipDuplicates(tourIndices);
