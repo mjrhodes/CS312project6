@@ -5,6 +5,7 @@ using System.Text;
 using System.Drawing;
 using System.Diagnostics;
 using Wintellect.PowerCollections;
+using System.Linq;
 
 namespace TSP
 {
@@ -886,7 +887,28 @@ namespace TSP
             //    }
             //}
 
+            ////Create a map
+            //Dictionary<int, int> edges = new Dictionary<int, int>();
+
+            ////Add values to map
+            //for(int i = 0; i < _MST.Length; i++)
+            //{
+            //    edges.Add(i, _MST[i].getDestination());
+            //}
+
+            //Edge[] MST = new Edge[_MST.Length];
+            int index = 0;
+            ////Sort Edges by starting city
+            //foreach (KeyValuePair<int, int> item in edges.OrderBy(key => key.Value))
+            //{
+            //    Console.WriteLine("Key: " + item.Key);
+            //    Console.WriteLine("Value: " + item.Value);
+            //    MST[index++] = _MST[item.Key];
+            //}
+
             ArrayList tourIndices = new ArrayList();
+            ArrayList bestRoute = new ArrayList();
+            double bestCostSoFar = int.MaxValue;
             bool stuck = true; //If stuck try again from starting in the next city
             for (int edgeIndex = 0; edgeIndex < MST.Length; edgeIndex++) //Try starting at each city
             {
@@ -919,7 +941,7 @@ namespace TSP
                     //Add cities from MST edges by going edge to edge
                     for (int i = edgeIndex + 1; i < MST.Length + edgeIndex; i++)
                     {
-                        int index = i;
+                        index = i;
                         if (index >= MST.Length) //wrap around
                         {
                             index = (i - MST.Length);
@@ -937,6 +959,8 @@ namespace TSP
 
                         startCityIndex = MST[index].getOrigin();
                         destinationCityIndex = MST[index].getDestination();
+                        City s = (City)this.Cities[startCityIndex];
+                        City d = (City)this.Cities[destinationCityIndex];
                         if (startCityIndex == lastCityAddedIndex)
                         {
                             lastCityAddedIndex = MST[index].getDestination();
@@ -950,7 +974,7 @@ namespace TSP
 
                             stuck = false;
                         }
-                        else if (destinationCityIndex == lastCityAddedIndex /*&& i > this.Cities.Length - number of odd vertices*/ )
+                        else if (destinationCityIndex == lastCityAddedIndex && !Double.IsInfinity(d.costToGetTo(s)) /*&& i > this.Cities.Length - number of odd vertices*/ )
                         {
                             lastCityAddedIndex = MST[index].getOrigin();
 
@@ -1017,14 +1041,23 @@ namespace TSP
                     //    tour.Add(closestCity);
                     //}
                 } while (!allEdgesVisited); //while all edges in the MST haven't been visited
-                if(!stuck)
+
+                //update best
+                bssf = new TSPSolution(skipDuplicates(tourIndices));
+                if(bestCostSoFar > bssf.costOfRoute() && !stuck)
                 {
-                    break;
+                    bestRoute = skipDuplicates(tourIndices);
+                    bestCostSoFar = bssf.costOfRoute();
                 }
+
+                //if (!stuck)
+                //{
+                //    break;
+                //}
             }
 
 
-            return skipDuplicates(tourIndices);
+            return bestRoute;
         }
 
         /*
